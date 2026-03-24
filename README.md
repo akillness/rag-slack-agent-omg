@@ -10,6 +10,8 @@ This repository documents a practical plan to build a personal RAG-based AI agen
 ## Documents
 - [Architecture](docs/architecture.md)
 - [Implementation Plan](docs/implementation-plan.md)
+- [OMG + langchain-bmad Plan](docs/implementation-plan-omg-langchain-bmad.md)
+- [Technical Spec](docs/technical-spec-rag-slack-agent.md)
 - [Slack Bot Design](docs/slack-bot-design.md)
 - [Execution Checklist](docs/execution-checklist.md)
 

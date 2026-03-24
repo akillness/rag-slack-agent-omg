@@ -14,11 +14,18 @@
 - 핵심 인사이트: 모델보다 retrieval 품질/출처 UX 우선
 
 ## 2) OMG Planning Phase
-- OMG PLAN에서 아래 4개 스트림 분해
+- OMG PLAN에서 아래 5개 스트림 분해
   - Stream A: Slack Bot Runtime
   - Stream B: Saga API Client
   - Stream C: Retrieval/Answer Policy
   - Stream D: Eval/Observability
+  - Stream E: GWS Publishing Workflow (Docs/Gmail/Calendar)
+
+## 2.1) ClawTeam-style Review Consensus
+(다중 리뷰 관점 합의)
+- Architecture 관점: API contract를 fast/deep 모드로 분리하고 citation schema를 강제
+- Security 관점: default draft-send, 승인 게이트, restricted 문서 검색 차단
+- PM 관점: 페르소나별 출력 계약(리더/팀장/실무/신규입사)을 명시
 
 ## 3) langchain-bmad 적용 포인트
 - BMAD 단계 분리:
@@ -42,10 +49,22 @@
 - Slash command
   - `/ask <question>`: fast mode (`/games/{id}/query`)
   - `/ask-deep <question>`: deep mode (`/search/agent/query`)
+  - `/weekly-pulse <audience>`: 전사/리더/실무자 버전 주간 요약
 - Mention mode
   - thread_ts 기준 대화 컨텍스트 유지
+- 메시지 구조 표준
+  - 모든 핵심 답변을 `Vision → Trend → Action → Momentum` 4블록으로 출력
+  - Action은 owner/due/KPI 포함 필수
 - 에러 정책
   - API timeout 시 사용자에게 재시도 안내 + trace id 출력
+  - 근거 부족 시 답변 중단 + 추가 질문 유도
+
+## 5.1) GWS 실행 워크플로우
+1. 응답 생성 후 Google Docs 초안 생성(템플릿: 전사/리더/실무)
+2. Gmail은 기본 draft 생성 후 승인 요청
+3. 승인 시 대상 그룹에 발송(리더/팀장/전사)
+4. Calendar 이벤트 생성 시 pre-read 문서 링크와 owner를 필수 첨부
+5. 모든 발송/생성 이벤트는 감사로그에 traceId로 기록
 
 ## 6) GitHub Issues 백로그 (추천)
 1. chore: project scaffold + env schema
@@ -60,6 +79,10 @@
 - [ ] Slack command responds within SLA
 - [ ] 모든 응답에 출처 포함
 - [ ] 무근거 응답 거절 정책 동작
+- [ ] Vision/Trend/Action/Momentum 포맷 준수율 >= 90%
+- [ ] Action owner/due/KPI 누락률 <= 5%
+- [ ] Gmail Draft-only + 승인 기반 발송
+- [ ] GWS 권한 정책(외부공유 제한) 검증 완료
 - [ ] 오류/타임아웃 로깅
 - [ ] 문서화 완료
 
